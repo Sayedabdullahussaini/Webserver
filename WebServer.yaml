@@ -1,0 +1,62 @@
+---
+- name: Deploy web Server
+  hosts: 3.86.245.94
+  remote_user: ec2-user
+
+
+  tasks:
+
+    - name: Installing HTTPD
+      yum: name=httpd state=latest
+
+    - name: Installing MariaDB package
+      yum:
+       name:
+       - mariadb-bench.x86_64
+       - mariadb-devel.x86_64
+       - mariadb-libs.x86_64
+       - mariadb-server.x86_64
+       - mariadb.x86_64
+       - MySQL-python.x86_64
+       - php
+       - php-odbc.x86_64
+
+       state: latest
+
+
+
+    - name: Start and Enable MariaDB Service
+      service: name=mariadb state=started
+
+    - name: Update MariaDB root password
+      mysql_user:
+        name: root
+        host: 3.86.245.94
+        login_user: root
+        check_implicit_admin: yes
+        priv: "*.*:ALL,GRANT"
+    - name: Create a New Database called demo
+      mysql_db: name=demo state=present login_user=root
+
+    - name: Copy SQL file
+      copy: src=/etc/ansible/playbooks/source/demo.sql dest=/var/tmp
+
+
+    - name: Create empty table called persons
+      shell: mysql -u root demo < /var/tmp/demo.sql
+
+    - name: Copy Insert PHP File
+      copy: src=/etc/ansible/playbooks/source/insert.php dest=/var/www/html/
+
+    - name: Copy Index file
+      copy: src=/etc/ansible/playbooks/source/index.html dest=/var/www/html/
+
+
+    - name: Copy Style CSS file
+      copy: src=/etc/ansible/playbooks/source/style.css dest=/var/www/html/
+
+    - name: Restart Web Service
+      service: name=httpd state=restarted
+...
+
+
