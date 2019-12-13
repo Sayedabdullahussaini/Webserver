@@ -1,0 +1,31 @@
+Test:
+
+The controller machine is running on a Redhat and the host machine is an amazon linux 2 instance.
+
+The host machine has been connected using a SSH-Keygen via the controller, also the publickey has been added to authorized_keys as requested.
+
+
+[fw.yaml]
+
+Firstly we need to enable the firewall to allow open connections to HTTP and HTTPS requests.
+
+So we run the fw.yaml file with ansible-playbook fw.yaml -b
+
+This playbook *adds* rules.
+It does not delete existing rules.
+
+
+
+
+[webserver.yaml]
+
+ansible-playbook webserver.yaml -b
+
+Here, we need to install and enable the HTTPD apache server followed by mariadb, python and php with respective dependencies.
+
+I have added these into another playbook where the ansible modules are defined.
+
+
+Now, we copy the program and db files in to the host machine and initialize the database.
+
+
