@@ -1,4 +1,7 @@
-Test:
+
+
+Webserver hostname : 3.86.245.94
+
 
 The controller machine is running on a Redhat and the host machine is an amazon linux 2 instance.
 
